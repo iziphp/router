@@ -1,11 +1,11 @@
 {
-    "name": "phpstandard/library",
-    "description": "Skeleton to create a composer library",
+    "name": "phpstandard/router",
+    "description": "Server request route dispatcher.",
     "type": "project",
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "PhpStandard\\PackageNamespace\\": "src/"
+            "PhpStandard\\Router\\": "src/"
         }
     },
     "authors": [
@@ -14,6 +14,9 @@
             "email": "or.vusal@gmail.com"
         }
     ],
+    "require": {
+        "php": ">=8.1"
+    },
     "require-dev": {
         "phpunit/phpunit": "^9.5",
         "phpstan/phpstan": "^1.8",

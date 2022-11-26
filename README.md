@@ -1,9 +1,9 @@
-# phpstandard/library
+# phpstandard/router
 
-Skeleton to create a composer library
+Server request route dispatcher.
 
 ## Installation
 
 ```bash
-composer create-project phpstandard/library
+composer require phpstandard/router
 ```
