@@ -46,7 +46,7 @@ class RouteTest extends TestCase
     /** @test */
     public function canGetPath()
     {
-        $this->assertEquals('/foo[/]?', $this->route->getPath());
+        $this->assertEquals('/foo', $this->route->getPath());
     }
 
     /** @test */
@@ -65,8 +65,8 @@ class RouteTest extends TestCase
     public function canCloneWithPath()
     {
         $route = $this->route->withPath('/bar');
-        $this->assertEquals('/foo[/]?', $this->route->getPath());
-        $this->assertEquals('/bar[/]?', $route->getPath());
+        $this->assertEquals('/foo', $this->route->getPath());
+        $this->assertEquals('/bar', $route->getPath());
     }
 
     /** @test */

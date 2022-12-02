@@ -70,7 +70,7 @@ class Dispatcher
         ServerRequestInterface $request
     ): Route {
         $uri = $request->getUri();
-        $url = $uri->getPath();
+        $url = '/' . trim($uri->getPath(), '/') . '/';
         $method = $request->getMethod();
 
         $params = [];
@@ -87,7 +87,7 @@ class Dispatcher
 
         foreach ($routes as $route) {
             $methods = explode("|", $route->getMethod());
-            $path = $route->getPath();
+            $path = $route->getPath() . '[/]?';
 
             // Method did not match, continue to next route.
             if (!in_array($method, $methods)) {

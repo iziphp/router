@@ -15,17 +15,20 @@ class RouteGroup
     protected array $collection = [];
 
     /**
-     * @param null|string $prefix
+     * @param null|string|array<string> $prefix
      * @param null|string $name
      * @param null|array $middlewares
      * @return void
      */
     public function __construct(
-        private ?string $prefix = null,
+        private string|array|null $prefix = null,
         private ?string $name = null,
         ?array $middlewares = null
     ) {
-        $this->prefix = $prefix;
+        $prefix = $prefix ?: '';
+        $parts = is_string($prefix) ? [$prefix] : $prefix;
+        $this->prefix = $this->sanitizePrefix(...$parts);
+
         $this->name = $name;
         $this->setMiddlewares(...$middlewares ?? []);
     }
@@ -37,13 +40,13 @@ class RouteGroup
     }
 
     /**
-     * @param null|string $prefix
+     * @param string ...$parts
      * @return RouteGroup
      */
-    public function withPrefix(?string $prefix): RouteGroup
+    public function withPrefix(string ...$parts): RouteGroup
     {
         $that = clone $this;
-        $that->prefix = $prefix;
+        $that->prefix = $that->sanitizePrefix(...$parts);
         return $that;
     }
 
@@ -95,7 +98,7 @@ class RouteGroup
 
             if ($entity instanceof Route) {
                 $map[] = $this->prefix
-                    ? $entity->withPath($this->prefix . $entity->getPath())
+                    ? $entity->withPath($this->prefix, $entity->getPath())
                     : $entity;
 
                 continue;
@@ -103,7 +106,7 @@ class RouteGroup
 
             if ($entity instanceof RouteGroup) {
                 $entity = $this->prefix
-                    ? $entity->withPrefix($this->prefix . $entity->getPrefix())
+                    ? $entity->withPrefix($this->prefix, $entity->getPrefix())
                     : $entity;
 
                 $map = array_merge($map, $entity->getRoutes());
@@ -136,5 +139,19 @@ class RouteGroup
         }
 
         return null;
+    }
+
+    /**
+     * @param string ...$parts
+     * @return string
+     */
+    private function sanitizePrefix(string ...$parts): string
+    {
+        $prefix = implode('/', $parts);
+        $prefix = preg_replace('/\/+/', '/', $prefix);
+        $prefix = trim($prefix, '/');
+        $prefix = '/' . $prefix;
+
+        return $prefix;
     }
 }

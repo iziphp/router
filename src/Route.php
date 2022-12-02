@@ -22,7 +22,7 @@ class Route
 
     /**
      * @param string $method
-     * @param string $path
+     * @param string|array<string> $path
      * @param RequestHandlerInterface|string $handler
      * @param null|string $name
      * @param null|array $middlewares
@@ -30,12 +30,13 @@ class Route
      */
     public function __construct(
         private string $method,
-        private string $path,
+        private string|array $path,
         private RequestHandlerInterface|string $handler,
         private ?string $name = null,
         ?array $middlewares = null
     ) {
-        $this->path = $this->sanitizePath($path);
+        $parts = is_string($path) ? [$path] : $path;
+        $this->path = $this->sanitizePath(...$parts);
         $this->handler = $handler;
 
         $this->setMiddlewares(...$middlewares ?? []);
@@ -54,13 +55,13 @@ class Route
     }
 
     /**
-     * @param string $path
+     * @param string ...$parts
      * @return Route
      */
-    public function withPath(string $path): Route
+    public function withPath(string ...$parts): Route
     {
         $that = clone $this;
-        $that->path = $this->sanitizePath($path);
+        $that->path = $that->sanitizePath(...$parts);
         return $that;
     }
 
@@ -119,14 +120,15 @@ class Route
     }
 
     /**
-     * @param string $path
+     * @param string ...$parts
      * @return string
      */
-    private function sanitizePath(string $path): string
+    private function sanitizePath(string ...$parts): string
     {
-        if ($path != '*' && substr($path, -4) !== '[/]?') {
-            $path = rtrim($path, '/') . '[/]?';
-        }
+        $path = implode('/', $parts);
+        $path = preg_replace('/\/+/', '/', $path);
+        $path = trim($path, '/');
+        $path = '/' . $path;
 
         return $path;
     }
