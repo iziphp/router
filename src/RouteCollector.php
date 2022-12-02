@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace PhpStandard\Router;
 
+use Traversable;
+
 /** @package PhpStandard\Router */
 class RouteCollector extends RouteGroup
 {
@@ -17,8 +19,8 @@ class RouteCollector extends RouteGroup
         $this->setMiddlewares(...$middlewares ?? []);
     }
 
-    /** @return array<Route>  */
-    public function getRoutes(): array
+    /** @return Traversable<Route>  */
+    public function getIterator(): Traversable
     {
         /** @var array<Route> $map */
         $map = [];
@@ -27,12 +29,12 @@ class RouteCollector extends RouteGroup
             $entity = $entity->withPrependedMiddleware(...$this->middlewares);
 
             if ($entity instanceof Route) {
-                $map[] = $entity;
+                yield $entity;
                 continue;
             }
 
             if ($entity instanceof RouteGroup) {
-                $map = array_merge($map, $entity->getRoutes());
+                yield from $entity->getIterator();
                 continue;
             }
         }

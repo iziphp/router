@@ -70,10 +70,10 @@ class RouteCollectorTest extends TestCase
                 ['corge-middleware']
             );
 
-        $routes = $this->rc->getRoutes();
+        $routes = $this->rc->getIterator();
         $this->assertCount(5, $routes);
 
-        foreach ($routes as $route) {
+        foreach ($this->rc->getIterator() as $route) {
             if ($route->getName() == 'quuz-name') {
                 $this->assertEquals(
                     ['foo-middleware', 'bar-middleware', 'quuz-middleware'],

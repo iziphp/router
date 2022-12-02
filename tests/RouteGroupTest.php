@@ -281,7 +281,7 @@ class RouteGroupTest extends TestCase
                 ['quux-middleware']
             );
 
-        $this->assertCount(3, $this->group->getRoutes());
+        $this->assertCount(3, $this->group->getIterator());
     }
 
     /** @test */
@@ -334,7 +334,7 @@ class RouteGroupTest extends TestCase
                 ['corge-middleware']
             );
 
-        $this->assertCount(5, $this->group->getRoutes());
+        $this->assertCount(5, $this->group->getIterator());
     }
 
     /** @test */
@@ -387,10 +387,10 @@ class RouteGroupTest extends TestCase
                 ['corge-middleware']
             );
 
-        $routes = $this->group->getRoutes();
+        $routes = $this->group->getIterator();
         $this->assertCount(5, $routes);
 
-        foreach ($routes as $route) {
+        foreach ($this->group->getIterator() as $route) {
             if ($route->getName() == 'quuz-name') {
                 $this->assertEquals(
                     ['foo-middleware', 'bar-middleware', 'quuz-middleware'],

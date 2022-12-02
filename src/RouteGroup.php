@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace PhpStandard\Router;
 
+use IteratorAggregate;
 use PhpStandard\Router\Traits\MiddlewareAwareTrait;
+use Traversable;
 
 /** @package PhpStandard\Router */
-class RouteGroup
+class RouteGroup implements IteratorAggregate
 {
     use MiddlewareAwareTrait;
 
@@ -87,17 +89,14 @@ class RouteGroup
         return $this;
     }
 
-    /** @return array  */
-    public function getRoutes(): array
+    /** @return Traversable<Route>  */
+    public function getIterator(): Traversable
     {
-        /** @var array<Route> $map */
-        $map = [];
-
         foreach ($this->collection as $entity) {
             $entity = $entity->withPrependedMiddleware(...$this->middlewares);
 
             if ($entity instanceof Route) {
-                $map[] = $this->prefix
+                yield $this->prefix
                     ? $entity->withPath($this->prefix, $entity->getPath())
                     : $entity;
 
@@ -109,13 +108,11 @@ class RouteGroup
                     ? $entity->withPrefix($this->prefix, $entity->getPrefix())
                     : $entity;
 
-                $map = array_merge($map, $entity->getRoutes());
+                yield from $entity->getIterator();
 
                 continue;
             }
         }
-
-        return $map;
     }
 
     /**

@@ -74,7 +74,7 @@ class Dispatcher
         $method = $request->getMethod();
 
         $params = [];
-        $routes = $this->collector->getRoutes();
+        $routes = $this->collector->getIterator();
 
         // Strip query string (?a=b) from Request Url
         $strpos = strpos($url, '?');
