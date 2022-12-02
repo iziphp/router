@@ -1,7 +1,7 @@
 {
     "name": "phpstandard/router",
     "description": "Server request route dispatcher.",
-    "type": "project",
+    "type": "library",
     "license": "MIT",
     "autoload": {
         "psr-4": {
