@@ -6,6 +6,7 @@ namespace PhpStandard\Router;
 
 use PhpStandard\Router\Traits\MiddlewareAwareTrait;
 
+/** @package PhpStandard\Router */
 class RouteGroup
 {
     use MiddlewareAwareTrait;
@@ -13,6 +14,12 @@ class RouteGroup
     /** @var (Route|RouteGroup)[] $collection */
     protected array $collection = [];
 
+    /**
+     * @param null|string $prefix
+     * @param null|string $name
+     * @param null|array $middlewares
+     * @return void
+     */
     public function __construct(
         private ?string $prefix = null,
         private ?string $name = null,
@@ -23,11 +30,16 @@ class RouteGroup
         $this->setMiddlewares(...$middlewares ?? []);
     }
 
+    /** @return null|string  */
     public function getPrefix(): ?string
     {
         return $this->prefix;
     }
 
+    /**
+     * @param null|string $prefix
+     * @return RouteGroup
+     */
     public function withPrefix(?string $prefix): RouteGroup
     {
         $that = clone $this;
@@ -35,17 +47,30 @@ class RouteGroup
         return $that;
     }
 
+    /** @return null|string  */
     public function getName(): ?string
     {
         return $this->name;
     }
 
+    /**
+     * @param Route|RouteGroup $route
+     * @return static
+     */
     public function add(Route|RouteGroup $route): static
     {
         $this->collection[] = $route;
         return $this;
     }
 
+    /**
+     * @param string $method
+     * @param string $path
+     * @param callable|string $handle
+     * @param null|string $name
+     * @param null|array $middlewares
+     * @return static
+     */
     public function map(
         string $method,
         string $path,
@@ -59,6 +84,7 @@ class RouteGroup
         return $this;
     }
 
+    /** @return array  */
     public function getRoutes(): array
     {
         /** @var array<Route> $map */
@@ -89,6 +115,10 @@ class RouteGroup
         return $map;
     }
 
+    /**
+     * @param string $name
+     * @return Route|RouteGroup|null
+     */
     public function getByName(string $name): Route|RouteGroup|null
     {
         foreach ($this->collection as $item) {

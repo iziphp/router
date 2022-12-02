@@ -12,12 +12,15 @@ declare(strict_types=1);
 namespace PhpStandard\Router;
 
 use PhpStandard\Router\Exceptions\RouteNotFoundException;
+use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
+/** @package PhpStandard\Router */
 class Dispatcher
 {
-    /** @var string[] Array of the match types  */
+    /** @var array<string> Array of the match types  */
     protected array $matchTypes = [
         'i'  => '[0-9]++', // Integer
         'a'  => '[0-9A-Za-z]++', // Alphanumeric
@@ -28,12 +31,24 @@ class Dispatcher
         ''   => '[^/\.]++'
     ];
 
+    /**
+     * @param RouteCollector $collector
+     * @param ContainerInterface $container
+     * @return void
+     */
     public function __construct(
         private RouteCollector $collector,
         private ContainerInterface $container
     ) {
     }
 
+    /**
+     * @param ServerRequestInterface $request
+     * @return null|Route
+     * @throws RouteNotFoundException
+     * @throws NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     */
     public function dispatch(ServerRequestInterface $request): ?Route
     {
         $route = $this->matchRoute(
@@ -118,6 +133,11 @@ class Dispatcher
         throw new RouteNotFoundException($request);
     }
 
+    /**
+     * @param Route $route
+     * @param array $param
+     * @return Route
+     */
     private function addParams(Route $route, array $param): Route
     {
         $params = [];
@@ -132,7 +152,6 @@ class Dispatcher
 
     /**
      * Compile the regex for a given route path (EXPENSIVE)
-     *
      * @param string $path
      * @return string
      */

@@ -4,8 +4,13 @@ declare(strict_types=1);
 
 namespace PhpStandard\Router;
 
+/** @package PhpStandard\Router */
 class RouteCollector extends RouteGroup
 {
+    /**
+     * @param null|array $middlewares
+     * @return void
+     */
     public function __construct(
         ?array $middlewares = null
     ) {

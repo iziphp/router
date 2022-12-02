@@ -8,11 +8,13 @@ use Psr\Http\Server\MiddlewareInterface;
 
 trait MiddlewareAwareTrait
 {
-    /**
-     * @var array<MiddlewareInterface|string>
-     */
+    /** @var array<MiddlewareInterface|string> */
     protected array $middlewares = [];
 
+    /**
+     * @param MiddlewareInterface|string ...$middlewares
+     * @return static
+     */
     public function withAppendedMiddleware(
         MiddlewareInterface|string ...$middlewares
     ): static {
@@ -22,6 +24,10 @@ trait MiddlewareAwareTrait
         return $that;
     }
 
+    /**
+     * @param MiddlewareInterface|string ...$middlewares
+     * @return static
+     */
     public function withPrependedMiddleware(
         MiddlewareInterface|string ...$middlewares
     ): static {
@@ -31,18 +37,19 @@ trait MiddlewareAwareTrait
         return $that;
     }
 
-    /**
-     * Get middleware stack
-     *
-     * @return array<MiddlewareInterface|string>
-     */
+    /** @return array<MiddlewareInterface|string>  */
     public function getMiddlewareStack(): array
     {
         return $this->middlewares;
     }
 
-    protected function setMiddlewares(MiddlewareInterface|string ...$middlewares): static
-    {
+    /**
+     * @param MiddlewareInterface|string ...$middlewares
+     * @return static
+     */
+    protected function setMiddlewares(
+        MiddlewareInterface|string ...$middlewares
+    ): static {
         $this->middlewares = $middlewares;
         return $this;
     }
