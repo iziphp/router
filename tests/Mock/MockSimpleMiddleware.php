@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PhpStandard\Router\Tests\Mock;
 
 use Psr\Http\Message\ServerRequestInterface;

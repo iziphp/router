@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PhpStandard\HttpServerHandler\Tests;
 
 use Laminas\Diactoros\ServerRequestFactory;

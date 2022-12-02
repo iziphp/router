@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PhpStandard\Router\Exceptions;
 
 class RequestHandlerNotResolvedException extends Exception
