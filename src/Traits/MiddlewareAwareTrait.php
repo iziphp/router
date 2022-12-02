@@ -46,10 +46,4 @@ trait MiddlewareAwareTrait
         $this->middlewares = $middlewares;
         return $this;
     }
-
-    // public function clearMiddlewareStack(): static
-    // {
-    //     $this->middlewares = [];
-    //     return static;
-    // }
 }

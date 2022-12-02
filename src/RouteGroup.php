@@ -40,12 +40,6 @@ class RouteGroup
         return $this->name;
     }
 
-    // public function setName(?string $name): RouteGroup
-    // {
-    //     $this->name = $name;
-    //     return $this;
-    // }
-
     public function add(Route|RouteGroup $route): static
     {
         $this->collection[] = $route;

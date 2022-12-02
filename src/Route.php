@@ -33,12 +33,6 @@ class Route
         return $this->method;
     }
 
-    // public function setMethod(string $method): Route
-    // {
-    //     $this->method = $method;
-    //     return $this;
-    // }
-
     public function getPath(): string
     {
         return $this->path;
@@ -56,33 +50,15 @@ class Route
         return $this->handler;
     }
 
-    // public function setHandler(RequestHandlerInterface|string $handler): Route
-    // {
-    //     $this->handler = $handler;
-    //     return $this;
-    // }
-
     public function getName(): ?string
     {
         return $this->name;
     }
 
-    // public function setName(?string $name): Route
-    // {
-    //     $this->name = $name;
-    //     return $this;
-    // }
-
     public function getParams(): ArrayIterator
     {
         return new ArrayIterator($this->parameters);
     }
-
-    // public function addParam(string $key, mixed $value): Route
-    // {
-    //     $this->parameters[$key] = $value;
-    //     return $this;
-    // }
 
     public function withParam(Param ...$params): Route
     {

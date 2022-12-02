@@ -136,13 +136,4 @@ class RouteTest extends TestCase
             (array)$route->getMiddlewareStack()
         );
     }
-
-    // /** @test */
-    // public function canResolve()
-    // {
-    //     $this->assertEquals(
-    //         '/foo[/]?',
-    //         $this->route->resolve()
-    //     );
-    // }
 }
