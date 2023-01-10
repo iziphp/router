@@ -94,7 +94,7 @@ class Dispatcher
                 continue;
             }
 
-            if ($path === '*') {
+            if ($route->getPath() === '/*') {
                 // * wildcard (matches all)
                 return $route;
             }
