@@ -44,12 +44,12 @@ class Dispatcher
 
     /**
      * @param ServerRequestInterface $request
-     * @return null|Route
+     * @return Route
      * @throws RouteNotFoundException
      * @throws NotFoundExceptionInterface
      * @throws ContainerExceptionInterface
      */
-    public function dispatch(ServerRequestInterface $request): ?Route
+    public function dispatch(ServerRequestInterface $request): Route
     {
         $route = $this->matchRoute(
             $request
