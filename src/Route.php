@@ -111,14 +111,6 @@ class Route
         return $this;
     }
 
-    /** @return ArrayIterator  */
-    public function getIterator(): ArrayIterator
-    {
-        return new ArrayIterator(
-            array_merge($this->middlewares, [$this->handler])
-        );
-    }
-
     /**
      * @param string ...$parts
      * @return string

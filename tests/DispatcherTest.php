@@ -83,17 +83,17 @@ class DispatcherTest extends TestCase
         );
 
         $route = $this->dispatcher->dispatch($request);
-        $iterator = $route->getIterator();
+
 
         $this->assertEquals('baz-name', $route->getName());
-        $this->assertEquals(5, $iterator->count());
+        $this->assertEquals(4, count($route->getMiddlewareStack()));
         $this->assertInstanceOf(
             MockRequestHandler::class,
-            $iterator[$iterator->count() - 1]
+            $route->getHandler()
         );
 
-        $legs = [...$iterator];
-        $this->assertCount(5, $legs);
+        $legs = [...$route->getMiddlewareStack()];
+        $this->assertCount(4, $legs);
     }
 
     /** @test */
