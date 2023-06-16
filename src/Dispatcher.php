@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Dispatcher::match() and Dispatcher::compilePath() methods are heavily
+ * Dispatcher::isPathMatched() and Dispatcher::compilePath() methods are
  * inspired by AltoRouter
  *
  * @see https://altorouter.com
@@ -11,14 +11,20 @@ declare(strict_types=1);
 
 namespace PhpStandard\Router;
 
+use PhpStandard\Http\Server\DispatcherInterface;
+use PhpStandard\Http\Server\RouteInterface;
+use PhpStandard\Http\Server\RouteParamInterface;
+use PhpStandard\Router\Exceptions\MethodNotAllowedException;
 use PhpStandard\Router\Exceptions\RouteNotFoundException;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\MiddlewareInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 
 /** @package PhpStandard\Router */
-class Dispatcher
+class Dispatcher implements DispatcherInterface
 {
     /** @var array<string> Array of the match types  */
     protected array $matchTypes = [
@@ -31,127 +37,162 @@ class Dispatcher
         ''   => '[^/\.]++'
     ];
 
+    /** @var array<string,mixed> */
+    private array $params = [];
+
     /**
-     * @param RouteCollector $collector
+     * @param Mapper $mapper
      * @param ContainerInterface $container
      * @return void
      */
     public function __construct(
-        private RouteCollector $collector,
+        private Mapper $mapper,
         private ContainerInterface $container
     ) {
     }
 
-    /**
-     * @param ServerRequestInterface $request
-     * @return Route
-     * @throws RouteNotFoundException
-     * @throws NotFoundExceptionInterface
-     * @throws ContainerExceptionInterface
-     */
-    public function dispatch(ServerRequestInterface $request): Route
+    /** @inheritDoc */
+    public function dispatch(ServerRequestInterface $request): RouteInterface
     {
-        $route = $this->matchRoute(
+        $map = $this->getMatchedMap(
             $request
         );
 
-        $route->resolve($this->container);
-        return $route;
+        return $this->generateRoute($map);
+    }
+
+    /**
+     * @param Map $map
+     * @return RouteInterface
+     * @throws NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     */
+    private function generateRoute(Map $map): RouteInterface
+    {
+        $handler = $map->handler;
+        if (is_string($handler)) {
+            $handler = $this->container->get($handler);
+            /** @var RequestHandlerInterface $handler */
+        }
+
+        $params = [];
+        foreach ($this->params as $key => $value) {
+            if (!is_numeric($key)) {
+                $params[] = new Param($key, $value);
+            }
+        }
+        /** @var array<RouteParamInterface> $params */
+
+        $middlewares = [];
+        foreach ($map->middlewares as $middleware) {
+            if (is_string($middleware)) {
+                $middleware = $this->container->get($middleware);
+            }
+
+            $middlewares[] = $middleware;
+        }
+        /** @var array<MiddlewareInterface> $middlewares */
+
+        return new Route($handler, $middlewares, $params);
     }
 
     /**
      * @param ServerRequestInterface $request
-     * @return Route
+     * @return Map
+     * @throws MethodNotAllowedException
      * @throws RouteNotFoundException
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.NPathComplexity)
      */
-    private function matchRoute(
+    private function getMatchedMap(
         ServerRequestInterface $request
-    ): Route {
+    ): Map {
         $uri = $request->getUri();
-        $url = '/' . trim($uri->getPath(), '/') . '/';
-        $method = $request->getMethod();
+        $requestPath = '/' . trim($uri->getPath(), '/') . '/';
+        $allowedMethods = [];
 
-        $params = [];
-        $routes = $this->collector->getIterator();
+        foreach ($this->mapper as $map) {
+            if ($this->isPathMatched($map, $requestPath)) {
+                if ($this->isMethodMatched($map, $request->getMethod())) {
+                    return $map;
+                }
 
-        // Strip query string (?a=b) from Request Url
-        $strpos = strpos($url, '?');
-        if ($strpos !== false) {
-            $url = substr($url, 0, $strpos);
+                $allowedMethods[] = $map->method;
+            }
         }
 
-        // Last character of the request url
-        $lastChar = $url ? $url[strlen($url) - 1] : '';
-
-        foreach ($routes as $route) {
-            $methods = explode("|", $route->getMethod());
-            $path = $route->getPath() . '[/]?';
-
-            // Method did not match, continue to next route.
-            if (!in_array($method, $methods)) {
-                continue;
-            }
-
-            if ($route->getPath() === '/*') {
-                // * wildcard (matches all)
-                return $route;
-            }
-
-            if (isset($path[0]) && $path[0] === '@') {
-                // @ regex delimiter
-                $pattern = '`' . substr($path, 1) . '`u';
-
-                if (preg_match($pattern, $url, $params) === 1) {
-                    return $this->addParams($route, $params);
-                }
-            }
-
-            $position = strpos($path, '[');
-            if ($position === false && strcmp($url, $path) === 0) {
-                // No params in url, do string comparison
-                return $this->addParams($route, $params);
-            }
-
-            // Compare longest non-param string with url before moving on to
-            // regex. Check if last character before param is a slash,
-            // because it could be optional if param is optional too
-            if (
-                strncmp($url, $path, $position) !== 0
-                && ($lastChar === '/' || $path[$position - 1] !== '/')
-            ) {
-                continue;
-            }
-
-            $regex = $this->compilePath($path);
-            if (preg_match($regex, $url, $params) === 1) {
-                return $this->addParams($route, $params);
-            }
+        if ($allowedMethods) {
+            throw new MethodNotAllowedException();
         }
 
         throw new RouteNotFoundException($request);
     }
 
     /**
-     * @param Route $route
-     * @param array $param
-     * @return Route
+     * @param Map $map
+     * @param string $method
+     * @return bool
      */
-    private function addParams(Route $route, array $param): Route
+    private function isMethodMatched(Map $map, string $method): bool
     {
-        $params = [];
-        foreach ($param as $key => $value) {
-            if (!is_numeric($key)) {
-                $params[] = new Param($key, $value);
+        return $method === $map->method->value;
+    }
+
+    /**
+     * @param Map $map
+     * @param string $requestPath
+     * @return bool
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
+     */
+    private function isPathMatched(Map $map, string $requestPath): bool
+    {
+        $this->params = [];
+
+        // Last character of the request url
+        $lastChar = $requestPath ? $requestPath[strlen($requestPath) - 1] : '';
+        $path = $map->getPath() . '[/]?';
+
+        if ($map->getPath() === '/*') {
+            // * wildcard (matches all)
+            return true;
+        }
+
+        if (isset($path[0]) && $path[0] === '@') {
+            // @ regex delimiter
+            $pattern = '`' . substr($path, 1) . '`u';
+
+            if (preg_match($pattern, $requestPath, $this->params) === 1) {
+                return true;
             }
         }
 
-        return $route->withParam(...$params);
+        $position = strpos($path, '[');
+        if ($position === false && strcmp($requestPath, $path) === 0) {
+            // No params in url, do string comparison
+            return true;
+        }
+
+        // Compare longest non-param string with url before moving on to
+        // regex. Check if last character before param is a slash,
+        // because it could be optional if param is optional too
+        /** @var int $position */
+        if (
+            strncmp($requestPath, $path, $position) !== 0
+            && ($lastChar === '/' || $path[$position - 1] !== '/')
+        ) {
+            return false;
+        }
+
+        $regex = $this->compilePath($path);
+        if (preg_match($regex, $requestPath, $this->params) === 1) {
+            return true;
+        }
+
+        return false;
     }
 
     /**
      * Compile the regex for a given route path (EXPENSIVE)
+     *
      * @param string $path
      * @return string
      */

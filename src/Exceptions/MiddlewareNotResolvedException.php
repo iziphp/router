@@ -1,33 +1,30 @@
 <?php
 
-declare(strict_types=1);
-
 namespace PhpStandard\Router\Exceptions;
 
 use Throwable;
 
-/** @package PhpStandard\Router\Exceptions */
-class RequestHandlerNotResolvedException extends Exception
+class MiddlewareNotResolvedException extends Exception
 {
     /**
-     * @param string $handler
+     * @param string $middleware
      * @return void
      */
     public function __construct(
-        private string $handler,
+        private string $middleware,
         int $code = 0,
         ?Throwable $previous = null
     ) {
         parent::__construct(
-            "Request handler '$handler' not resolved",
+            "Middleware '$middleware' not resolved",
             $code,
             $previous
         );
     }
 
     /** @return string  */
-    public function getHandler(): string
+    public function getMiddleware(): string
     {
-        return $this->handler;
+        return $this->middleware;
     }
 }

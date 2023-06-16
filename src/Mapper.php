@@ -1,0 +1,106 @@
+<?php
+
+declare(strict_types=1);
+
+namespace PhpStandard\Router;
+
+use IteratorAggregate;
+use PhpStandard\Http\Message\RequestMethodEnum;
+use Psr\Http\Server\MiddlewareInterface;
+use Psr\Http\Server\RequestHandlerInterface;
+use Traversable;
+
+/**
+ * @package PhpStandard\Router
+ * @implements IteratorAggregate<Map>
+ */
+class Mapper implements IteratorAggregate
+{
+    public MiddlewareCollection $middlewares;
+
+    /** @var (Map|Group)[] $collection */
+    private array $collection = [];
+
+    /** @return void  */
+    public function __construct()
+    {
+        $this->middlewares = new MiddlewareCollection($this);
+    }
+
+    /**
+     * @param Map|Group $route
+     * @return static
+     */
+    public function add(Map|Group $route): static
+    {
+        $this->collection[] = $route;
+        return $this;
+    }
+
+    /**
+     * @param string $method
+     * @param string $path
+     * @param RequestHandlerInterface|string $handle
+     * @param null|string $name
+     * @param null|array<MiddlewareInterface|string> $middlewares
+     * @return static
+     * @SuppressWarnings(PHPMD.StaticAccess)
+     */
+    public function map(
+        string $method,
+        string $path,
+        RequestHandlerInterface|string $handle,
+        ?string $name = null,
+        ?array $middlewares = null
+    ): static {
+        $map = new Map();
+        $map->method = RequestMethodEnum::from($method);
+        $map->path = $path;
+        $map->handler = $handle;
+        $map->name = $name;
+        $map->middlewares->append(...$middlewares ?? []);
+
+        $this->add($map);
+
+        return $this;
+    }
+
+    /** @return Traversable<Map>  */
+    public function getIterator(): Traversable
+    {
+        foreach ($this->collection as $entity) {
+            if ($entity instanceof Map) {
+                yield $entity;
+                continue;
+            }
+
+            if ($entity instanceof Group) {
+                yield from $entity->getIterator();
+                continue;
+            }
+        }
+    }
+
+    /**
+     * @param string $name
+     * @return Map|Group|null
+     */
+    public function getByName(string $name): Map|Group|null
+    {
+        foreach ($this->collection as $item) {
+            if ($item->name == $name) {
+                return $item;
+            }
+
+            if ($item instanceof Group) {
+                $result = $item->getByName($name);
+
+                if ($result) {
+                    return $result;
+                }
+            }
+        }
+
+        return null;
+    }
+}

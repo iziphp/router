@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace PhpStandard\Router\Exceptions;
 
+use PhpStandard\Http\Server\Exceptions\RouteNotFoundExceptionInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Throwable;
 
 /** @package PhpStandard\Router\Exceptions */
-class RouteNotFoundException extends Exception
+class RouteNotFoundException extends Exception implements
+    RouteNotFoundExceptionInterface
 {
     /**
      * @param ServerRequestInterface $request

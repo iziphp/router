@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace PhpStandard\Router;
 
+use PhpStandard\Http\Server\RouteParamInterface;
+
 /** @package PhpStandard\Router */
-class Param
+class Param implements RouteParamInterface
 {
     /**
      * @param string $key
@@ -18,13 +20,17 @@ class Param
     ) {
     }
 
-    /** @return string  */
+    /**
+     * @inheritDoc
+     */
     public function getKey(): string
     {
         return $this->key;
     }
 
-    /** @return mixed  */
+    /**
+     * @inheritDoc
+     */
     public function getValue(): mixed
     {
         return $this->value;
