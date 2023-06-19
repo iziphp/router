@@ -14,7 +14,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 use Traversable;
 
 /** @package PhpStandard\Router */
-class Mapper implements MapperInterface
+class SimpleMapper implements MapperInterface
 {
     public MiddlewareCollection $middlewares;
 
