@@ -4,17 +4,13 @@ declare(strict_types=1);
 
 namespace PhpStandard\Router;
 
-use IteratorAggregate;
 use PhpStandard\Http\Message\RequestMethodEnum;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Traversable;
 
-/**
- * @package PhpStandard\Router
- * @implements IteratorAggregate<Map>
- */
-class Mapper implements IteratorAggregate
+/** @package PhpStandard\Router */
+class Mapper implements MapperInterface
 {
     public MiddlewareCollection $middlewares;
 
@@ -65,7 +61,7 @@ class Mapper implements IteratorAggregate
         return $this;
     }
 
-    /** @return Traversable<Map>  */
+    /** @inheritDoc  */
     public function getIterator(): Traversable
     {
         foreach ($this->collection as $entity) {

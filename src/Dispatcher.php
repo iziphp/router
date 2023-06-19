@@ -41,12 +41,12 @@ class Dispatcher implements DispatcherInterface
     private array $params = [];
 
     /**
-     * @param Mapper $mapper
+     * @param MapperInterface $mapper
      * @param ContainerInterface $container
      * @return void
      */
     public function __construct(
-        private Mapper $mapper,
+        private MapperInterface $mapper,
         private ContainerInterface $container
     ) {
     }
