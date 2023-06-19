@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace PhpStandard\Router;
 
 use IteratorAggregate;
+use PhpStandard\Router\Mapper\Mapper;
 
 /**
  * @package PhpStandard\Router

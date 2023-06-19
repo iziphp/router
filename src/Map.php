@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace PhpStandard\Router;
 
 use PhpStandard\Http\Message\RequestMethodEnum;
+use PhpStandard\Router\Mapper\Mapper;
 use Psr\Http\Server\RequestHandlerInterface;
 
 /** @package PhpStandard\Router */

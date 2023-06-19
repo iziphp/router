@@ -3,6 +3,7 @@
 namespace PhpStandard\Router;
 
 use IteratorAggregate;
+use PhpStandard\Router\Mapper\Mapper;
 use Psr\Http\Server\MiddlewareInterface;
 use Traversable;
 

@@ -2,9 +2,13 @@
 
 declare(strict_types=1);
 
-namespace PhpStandard\Router;
+namespace PhpStandard\Router\Mapper;
 
 use PhpStandard\Http\Message\RequestMethodEnum;
+use PhpStandard\Router\Group;
+use PhpStandard\Router\Map;
+use PhpStandard\Router\MapperInterface;
+use PhpStandard\Router\MiddlewareCollection;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Traversable;
