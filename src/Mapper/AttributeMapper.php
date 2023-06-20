@@ -24,6 +24,7 @@ class AttributeMapper implements MapperInterface
 {
     /** @var array<string> $paths */
     private array $paths = [];
+    private bool $isCachingEnabled = false;
 
     /**
      * @param null|CacheItemPoolInterface $cache If NULL, then caching is disabled.
@@ -48,6 +49,18 @@ class AttributeMapper implements MapperInterface
     public function getIterator(): Traversable
     {
         yield from $this->getMaps();
+    }
+
+    /** @return void */
+    public function enableCaching(): void
+    {
+        $this->isCachingEnabled = true;
+    }
+
+    /** @return void */
+    public function disableCaching(): void
+    {
+        $this->isCachingEnabled = false;
     }
 
     /**
@@ -93,7 +106,7 @@ class AttributeMapper implements MapperInterface
     {
         $item = null;
 
-        if ($this->cache) {
+        if ($this->cache && $this->isCachingEnabled) {
             $item = $this->cache->getItem('routes');
 
             if ($item->isHit()) {
@@ -127,7 +140,7 @@ class AttributeMapper implements MapperInterface
             $this->parse($reflection, $map);
         }
 
-        if ($item && $this->cache) {
+        if ($item && $this->cache && $this->isCachingEnabled) {
             $item->set($map);
             $this->cache->save($item);
         }
