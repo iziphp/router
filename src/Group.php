@@ -5,16 +5,16 @@ declare(strict_types=1);
 namespace PhpStandard\Router;
 
 use IteratorAggregate;
-use PhpStandard\Router\Mapper\Mapper;
+use PhpStandard\Router\Mapper\SimpleMapper;
 
 /**
  * @package PhpStandard\Router
  * @implements IteratorAggregate<Map>
  */
-class Group extends Mapper implements IteratorAggregate
+class Group extends SimpleMapper implements IteratorAggregate
 {
     public ?string $name = null;
-    public null|Group|Mapper $parent = null;
+    public null|Group|SimpleMapper $parent = null;
     public ?string $prefix = null;
 
     /** @return string  */

@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace PhpStandard\Router;
 
 use PhpStandard\Http\Message\RequestMethodEnum;
-use PhpStandard\Router\Mapper\Mapper;
+use PhpStandard\Router\Mapper\SimpleMapper;
 use Psr\Http\Server\RequestHandlerInterface;
 
 /** @package PhpStandard\Router */
 class Map
 {
     public RequestMethodEnum $method = RequestMethodEnum::GET;
-    public null|Group|Mapper $parent = null;
+    public null|Group|SimpleMapper $parent = null;
     public ?string $path = null;
     public RequestHandlerInterface|string $handler;
     public ?string $name = null;

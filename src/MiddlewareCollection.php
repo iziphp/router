@@ -3,7 +3,7 @@
 namespace PhpStandard\Router;
 
 use IteratorAggregate;
-use PhpStandard\Router\Mapper\Mapper;
+use PhpStandard\Router\Mapper\SimpleMapper;
 use Psr\Http\Server\MiddlewareInterface;
 use Traversable;
 
@@ -17,11 +17,11 @@ class MiddlewareCollection implements IteratorAggregate
     private array $collection = [];
 
     /**
-     * @param null|Map|Mapper $owner
+     * @param null|Map|SimpleMapper $owner
      * @return void
      */
     public function __construct(
-        private null|Map|Group|Mapper $owner = null
+        private null|Map|Group|SimpleMapper $owner = null
     ) {
     }
 
@@ -29,7 +29,7 @@ class MiddlewareCollection implements IteratorAggregate
     public function getIterator(): Traversable
     {
         if ($this->owner) {
-            /** @var null|Group|Mapper $parent */
+            /** @var null|Group|SimpleMapper $parent */
             $parent = $this->owner->parent ?? null;
 
             if ($parent) {
