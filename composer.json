@@ -29,7 +29,8 @@
         "psr/http-server-middleware": "^1.0",
         "psr/container": "^2.0",
         "phpstandard/http-server-dispatcher": "dev-main",
-        "phpstandard/http-message-util": "dev-main"
+        "phpstandard/http-message-util": "dev-main",
+        "psr/cache": "^3.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^9.5",
