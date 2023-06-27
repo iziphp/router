@@ -4,15 +4,12 @@ namespace Easy\Router\Attributes;
 
 use Attribute;
 use Easy\Http\Message\RequestMethod;
+use Easy\Router\Priority;
 
 /** @package Easy\Router\Attributes */
 #[Attribute(Attribute::TARGET_CLASS | Attribute::IS_REPEATABLE)]
 class Route
 {
-    public const PRIORITY_LOW = 0;
-    public const PRIORITY_NORMAL = 10;
-    public const PRIORITY_HIGH = 100;
-
     /**
      * @param string $path
      * @param RequestMethod $method
@@ -22,7 +19,7 @@ class Route
     public function __construct(
         public readonly string $path,
         public readonly RequestMethod $method = RequestMethod::GET,
-        public readonly int $priority = self::PRIORITY_NORMAL
+        public readonly int $priority = Priority::NORMAL
     ) {
     }
 }

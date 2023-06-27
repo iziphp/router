@@ -9,6 +9,7 @@ use Easy\Router\Group;
 use Easy\Router\Map;
 use Easy\Router\MapperInterface;
 use Easy\Router\MiddlewareCollection;
+use Easy\Router\Priority;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Traversable;
@@ -41,6 +42,7 @@ class SimpleMapper implements MapperInterface
      * @param string $method
      * @param string $path
      * @param RequestHandlerInterface|string $handle
+     * @param int $priority
      * @param null|string $name
      * @param null|array<MiddlewareInterface|string> $middlewares
      * @return static
@@ -50,6 +52,7 @@ class SimpleMapper implements MapperInterface
         string $method,
         string $path,
         RequestHandlerInterface|string $handle,
+        int $priority = Priority::NORMAL,
         ?string $name = null,
         ?array $middlewares = null
     ): static {
@@ -59,6 +62,7 @@ class SimpleMapper implements MapperInterface
         $map->handler = $handle;
         $map->name = $name;
         $map->middlewares->append(...$middlewares ?? []);
+        $map->priority = $priority;
 
         $this->add($map);
 

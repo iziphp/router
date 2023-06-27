@@ -16,16 +16,24 @@ use Easy\Http\Server\RouteInterface;
 use Easy\Http\Server\RouteParamInterface;
 use Easy\Router\Exceptions\MethodNotAllowedException;
 use Easy\Router\Exceptions\RouteNotFoundException;
+use Iterator;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use SplPriorityQueue;
 
-/** @package Easy\Router */
+/**
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @package Easy\Router
+ */
 class Dispatcher implements DispatcherInterface
 {
+    /** @var array<MapperInterface> $mappers */
+    private array $mappers = [];
+
     /** @var array<string> Array of the match types  */
     protected array $matchTypes = [
         'i'  => '[0-9]++', // Integer
@@ -41,15 +49,24 @@ class Dispatcher implements DispatcherInterface
     private array $params = [];
 
     /**
-     * @param MapperInterface $mapper
      * @param ContainerInterface $container
      * @return void
      */
     public function __construct(
-        private MapperInterface $mapper,
         private ContainerInterface $container
     ) {
     }
+
+    /**
+     * @param MapperInterface $mapper
+     * @return Dispatcher
+     */
+    public function pushMapper(MapperInterface $mapper): self
+    {
+        $this->mappers[] = $mapper;
+        return $this;
+    }
+
 
     /** @inheritDoc */
     public function dispatch(ServerRequestInterface $request): RouteInterface
@@ -109,7 +126,9 @@ class Dispatcher implements DispatcherInterface
         $requestPath = '/' . trim($uri->getPath(), '/') . '/';
         $allowedMethods = [];
 
-        foreach ($this->mapper as $map) {
+        $maps = $this->getSortedMaps();
+
+        foreach ($maps as $map) {
             if ($this->isPathMatched($map, $requestPath)) {
                 if ($this->isMethodMatched($map, $request->getMethod())) {
                     return $map;
@@ -124,6 +143,22 @@ class Dispatcher implements DispatcherInterface
         }
 
         throw new RouteNotFoundException($request);
+    }
+
+    /**
+     * @return Iterator<Map>
+     */
+    private function getSortedMaps(): Iterator
+    {
+        /** @var SplPriorityQueue<int,Map> */
+        $queue = new SplPriorityQueue();
+        foreach ($this->mappers as $mapper) {
+            foreach ($mapper as $map) {
+                $queue->insert($map, $map->priority);
+            }
+        }
+
+        return $queue;
     }
 
     /**

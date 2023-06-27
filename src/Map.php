@@ -17,6 +17,7 @@ class Map
     public RequestHandlerInterface|string $handler;
     public ?string $name = null;
     public MiddlewareCollection $middlewares;
+    public int $priority = Priority::NORMAL;
 
     /** @return void  */
     public function __construct()

@@ -73,6 +73,7 @@ class AttributeMapper implements MapperInterface
             $map = new Map();
             $map->method = $scheme['method'];
             $map->handler = $scheme['handler'];
+            $map->priority = $scheme['priority'];
 
             $prefixes = $scheme['prefixes'];
             $prefixes[] = $scheme['path'];
@@ -234,7 +235,5 @@ class AttributeMapper implements MapperInterface
                 'priority' => $ins->priority,
             ];
         }
-
-        usort($map, fn ($current, $next) => $next['priority'] <=> $current['priority']);
     }
 }
