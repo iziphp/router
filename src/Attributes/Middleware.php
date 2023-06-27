@@ -1,11 +1,11 @@
 <?php
 
-namespace PhpStandard\Router\Attributes;
+namespace Easy\Router\Attributes;
 
 use Attribute;
 use Psr\Http\Server\MiddlewareInterface;
 
-/** @package PhpStandard\Router\Attributes */
+/** @package Easy\Router\Attributes */
 #[Attribute(Attribute::TARGET_CLASS | Attribute::IS_REPEATABLE)]
 class Middleware
 {

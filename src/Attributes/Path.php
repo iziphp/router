@@ -1,10 +1,10 @@
 <?php
 
-namespace PhpStandard\Router\Attributes;
+namespace Easy\Router\Attributes;
 
 use Attribute;
 
-/** @package PhpStandard\Router\Attributes */
+/** @package Easy\Router\Attributes */
 #[Attribute(Attribute::TARGET_CLASS | Attribute::IS_REPEATABLE)]
 class Path
 {

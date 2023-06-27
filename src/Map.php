@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace PhpStandard\Router;
+namespace Easy\Router;
 
-use PhpStandard\Http\Message\RequestMethodEnum;
-use PhpStandard\Router\Mapper\SimpleMapper;
+use Easy\Http\Message\RequestMethod;
+use Easy\Router\Mapper\SimpleMapper;
 use Psr\Http\Server\RequestHandlerInterface;
 
-/** @package PhpStandard\Router */
+/** @package Easy\Router */
 class Map
 {
-    public RequestMethodEnum $method = RequestMethodEnum::GET;
+    public RequestMethod $method = RequestMethod::GET;
     public null|Group|SimpleMapper $parent = null;
     public ?string $path = null;
     public RequestHandlerInterface|string $handler;

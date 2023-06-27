@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace PhpStandard\Router\Exceptions;
+namespace Easy\Router\Exceptions;
 
 use Throwable;
 
-/** @package PhpStandard\Router\Exceptions */
+/** @package Easy\Router\Exceptions */
 class RequestHandlerNotResolvedException extends Exception
 {
     /**

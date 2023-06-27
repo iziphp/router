@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace PhpStandard\Router;
+namespace Easy\Router;
 
-use PhpStandard\Http\Server\RouteParamInterface;
+use Easy\Http\Server\RouteParamInterface;
 
-/** @package PhpStandard\Router */
+/** @package Easy\Router */
 class Param implements RouteParamInterface
 {
     /**

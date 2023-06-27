@@ -1,9 +1,9 @@
-# phpstandard/router
+# iziphp/router
 
 Server request route dispatcher.
 
 ## Installation
 
 ```bash
-composer require phpstandard/router
+composer require iziphp/router
 ```

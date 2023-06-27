@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-namespace PhpStandard\Router\Mapper;
+namespace Easy\Router\Mapper;
 
-use PhpStandard\Http\Message\RequestMethodEnum;
-use PhpStandard\Router\Group;
-use PhpStandard\Router\Map;
-use PhpStandard\Router\MapperInterface;
-use PhpStandard\Router\MiddlewareCollection;
+use Easy\Http\Message\RequestMethod;
+use Easy\Router\Group;
+use Easy\Router\Map;
+use Easy\Router\MapperInterface;
+use Easy\Router\MiddlewareCollection;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Traversable;
 
-/** @package PhpStandard\Router */
+/** @package Easy\Router\Mapper */
 class SimpleMapper implements MapperInterface
 {
     public MiddlewareCollection $middlewares;
@@ -54,7 +54,7 @@ class SimpleMapper implements MapperInterface
         ?array $middlewares = null
     ): static {
         $map = new Map();
-        $map->method = RequestMethodEnum::from($method);
+        $map->method = RequestMethod::from($method);
         $map->path = $path;
         $map->handler = $handle;
         $map->name = $name;

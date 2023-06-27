@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace PhpStandard\Router;
+namespace Easy\Router;
 
-use PhpStandard\Http\Server\RouteInterface;
-use PhpStandard\Http\Server\RouteParamInterface;
+use Easy\Http\Server\RouteInterface;
+use Easy\Http\Server\RouteParamInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
-/** @package PhpStandard\Router */
+/** @package Easy\Router */
 class Route implements RouteInterface
 {
     /** @var array<MiddlewareInterface> */

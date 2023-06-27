@@ -9,13 +9,13 @@
 
 declare(strict_types=1);
 
-namespace PhpStandard\Router;
+namespace Easy\Router;
 
-use PhpStandard\Http\Server\DispatcherInterface;
-use PhpStandard\Http\Server\RouteInterface;
-use PhpStandard\Http\Server\RouteParamInterface;
-use PhpStandard\Router\Exceptions\MethodNotAllowedException;
-use PhpStandard\Router\Exceptions\RouteNotFoundException;
+use Easy\Http\Server\DispatcherInterface;
+use Easy\Http\Server\RouteInterface;
+use Easy\Http\Server\RouteParamInterface;
+use Easy\Router\Exceptions\MethodNotAllowedException;
+use Easy\Router\Exceptions\RouteNotFoundException;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -23,7 +23,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
-/** @package PhpStandard\Router */
+/** @package Easy\Router */
 class Dispatcher implements DispatcherInterface
 {
     /** @var array<string> Array of the match types  */

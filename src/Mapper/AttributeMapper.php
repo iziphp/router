@@ -1,14 +1,14 @@
 <?php
 
-namespace PhpStandard\Router\Mapper;
+namespace Easy\Router\Mapper;
 
+use Easy\Http\Message\RequestMethod; # Used in doctype.
 use Generator;
-use PhpStandard\Http\Message\RequestMethodEnum; # Used in doctype.
-use PhpStandard\Router\Attributes\Middleware;
-use PhpStandard\Router\Attributes\Path;
-use PhpStandard\Router\Attributes\Route;
-use PhpStandard\Router\Map;
-use PhpStandard\Router\MapperInterface;
+use Easy\Router\Attributes\Middleware;
+use Easy\Router\Attributes\Path;
+use Easy\Router\Attributes\Route;
+use Easy\Router\Map;
+use Easy\Router\MapperInterface;
 use Psr\Cache\CacheItemPoolInterface;
 use Psr\Cache\InvalidArgumentException;
 use Psr\Http\Server\MiddlewareInterface; # Used in doctype.
@@ -19,7 +19,7 @@ use ReflectionClass;
 use SplFileInfo;
 use Traversable;
 
-/** @package PhpStandard\Router */
+/** @package Easy\Router\Mapper */
 class AttributeMapper implements MapperInterface
 {
     /** @var array<string> $paths */
@@ -94,7 +94,7 @@ class AttributeMapper implements MapperInterface
     /**
      * @return array<array{
      *  'path':string,
-     *  'method':RequestMethodEnum,
+     *  'method':RequestMethod,
      *  'middlewares':array<class-string<MiddlewareInterface>>,
      *  'prefixes':array<string>,
      *  'handler':class-string<RequestHandlerInterface>,
@@ -113,7 +113,7 @@ class AttributeMapper implements MapperInterface
                 /**
                  * @var array<array{
                  *  'path':string,
-                 *  'method':RequestMethodEnum,
+                 *  'method':RequestMethod,
                  *  'middlewares':array<class-string<MiddlewareInterface>>,
                  *  'prefixes':array<string>,
                  *  'handler':class-string<RequestHandlerInterface>,
@@ -178,7 +178,7 @@ class AttributeMapper implements MapperInterface
      * @param ReflectionClass<object> $reflection
      * @param array<array{
      *  'path':string,
-     *  'method':RequestMethodEnum,
+     *  'method':RequestMethod,
      *  'middlewares':array<class-string<MiddlewareInterface>>,
      *  'prefixes':array<string>,
      *  'handler':class-string<RequestHandlerInterface>,

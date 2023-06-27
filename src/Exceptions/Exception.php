@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace PhpStandard\Router\Exceptions;
+namespace Easy\Router\Exceptions;
 
-use PhpStandard\Http\Server\Exceptions\DispatcherExceptionInterface;
+use Easy\Http\Server\Exceptions\DispatcherExceptionInterface;
 
-/** @package PhpStandard\Router\Exceptions */
+/** @package Easy\Router\Exceptions */
 class Exception extends \Exception implements DispatcherExceptionInterface
 {
 }

@@ -1,14 +1,14 @@
 <?php
 
-namespace PhpStandard\Router;
+namespace Easy\Router;
 
 use IteratorAggregate;
-use PhpStandard\Router\Mapper\SimpleMapper;
+use Easy\Router\Mapper\SimpleMapper;
 use Psr\Http\Server\MiddlewareInterface;
 use Traversable;
 
 /**
- * @package PhpStandard\Router
+ * @package Easy\Router
  * @implements IteratorAggregate<MiddlewareInterface|string>
  */
 class MiddlewareCollection implements IteratorAggregate

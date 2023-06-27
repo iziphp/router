@@ -1,11 +1,11 @@
 <?php
 
-namespace PhpStandard\Router\Attributes;
+namespace Easy\Router\Attributes;
 
 use Attribute;
-use PhpStandard\Http\Message\RequestMethodEnum;
+use Easy\Http\Message\RequestMethod;
 
-/** @package PhpStandard\Router\Attributes */
+/** @package Easy\Router\Attributes */
 #[Attribute(Attribute::TARGET_CLASS | Attribute::IS_REPEATABLE)]
 class Route
 {
@@ -15,13 +15,13 @@ class Route
 
     /**
      * @param string $path
-     * @param RequestMethodEnum $method
+     * @param RequestMethod $method
      * @param int $priority
      * @return void
      */
     public function __construct(
         public readonly string $path,
-        public readonly RequestMethodEnum $method = RequestMethodEnum::GET,
+        public readonly RequestMethod $method = RequestMethod::GET,
         public readonly int $priority = self::PRIORITY_NORMAL
     ) {
     }

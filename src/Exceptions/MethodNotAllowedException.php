@@ -2,10 +2,11 @@
 
 declare(strict_types=1);
 
-namespace PhpStandard\Router\Exceptions;
+namespace Easy\Router\Exceptions;
 
-use PhpStandard\Http\Server\Exceptions\MethodNotAllowedExceptionInterface;
+use Easy\Http\Server\Exceptions\MethodNotAllowedExceptionInterface;
 
+/** @package Easy\Router\Exceptions */
 class MethodNotAllowedException extends Exception implements
     MethodNotAllowedExceptionInterface
 {

@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace PhpStandard\Router;
+namespace Easy\Router;
 
 use IteratorAggregate;
-use PhpStandard\Router\Mapper\SimpleMapper;
+use Easy\Router\Mapper\SimpleMapper;
 
 /**
- * @package PhpStandard\Router
+ * @package Easy\Router
  * @implements IteratorAggregate<Map>
  */
 class Group extends SimpleMapper implements IteratorAggregate

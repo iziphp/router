@@ -1,9 +1,10 @@
 <?php
 
-namespace PhpStandard\Router\Exceptions;
+namespace Easy\Router\Exceptions;
 
 use Throwable;
 
+/** @package Easy\Router\Exceptions */
 class MiddlewareNotResolvedException extends Exception
 {
     /**

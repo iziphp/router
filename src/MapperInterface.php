@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace PhpStandard\Router;
+namespace Easy\Router;
 
 use IteratorAggregate;
 use Traversable;
 
 /**
- * @package PhpStandard\Router
+ * @package Easy\Router
  * @extends IteratorAggregate<Map>
  */
 interface MapperInterface extends IteratorAggregate
