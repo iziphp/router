@@ -40,6 +40,7 @@ class Dispatcher implements DispatcherInterface
         'a'  => '[0-9A-Za-z]++', // Alphanumeric
         'h'  => '[0-9A-Fa-f]++', // Hexadecimal
         's'  => '[0-9A-Za-z\-]++', // url slug
+        'uuid' => '[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}',
         '*'  => '.+?', //
         '**' => '.++',
         ''   => '[^/\.]++'
