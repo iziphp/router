@@ -59,6 +59,17 @@ class Dispatcher implements DispatcherInterface
     }
 
     /**
+     * @param string $name 
+     * @param string $regex 
+     * @return Dispatcher 
+     */
+    public function addMatchType(string $name, string $regex): self
+    {
+        $this->matchTypes[$name] = $regex;
+        return $this;
+    }
+
+    /**
      * @param MapperInterface $mapper
      * @return Dispatcher
      */
