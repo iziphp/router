@@ -126,20 +126,25 @@ class AttributeMapper implements MapperInterface
             }
         }
 
-        $includedFiles = $this->getIncludedFiles();
-        $declared = get_declared_classes();
+        $files = $this->getFileList();
         $map = [];
 
-        foreach ($declared as $className) {
-            $reflection = new ReflectionClass($className);
-            $sourceFile = $reflection->getFileName();
+        ob_start();
 
-            if (!in_array($sourceFile, $includedFiles, true)) {
-                continue;
+        foreach ($files as $path) {
+            $classes = (static function () use ($path): array {
+                $declared = get_declared_classes();
+                require_once $path;
+                return array_diff(get_declared_classes(), $declared);
+            })();
+
+            foreach ($classes as $className) {
+                $reflection = new ReflectionClass($className);
+                $this->parse($reflection, $map);
             }
-
-            $this->parse($reflection, $map);
         }
+
+        ob_end_clean();
 
         if ($item && $this->cache && $this->isCachingEnabled) {
             $item->set($map);
@@ -156,23 +161,25 @@ class AttributeMapper implements MapperInterface
      *
      * @return array<string>
      */
-    private function getIncludedFiles(): array
+    private function getFileList(): array
     {
-        $includedFiles = [];
+        $files = [];
+
         foreach ($this->paths as $path) {
             $directory = new RecursiveDirectoryIterator($path);
             $iterator = new RecursiveIteratorIterator($directory);
 
             /** @var SplFileInfo $info */
             foreach ($iterator as $info) {
-                if ($info->isFile()) {
-                    require_once $info->getRealPath();
-                    $includedFiles[] = $info->getRealPath();
+                if (!$info->isFile()) {
+                    continue;
                 }
+
+                $files[] = $info->getRealPath();
             }
         }
 
-        return $includedFiles;
+        return $files;
     }
 
     /**
