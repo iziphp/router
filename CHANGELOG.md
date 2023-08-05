@@ -9,6 +9,16 @@ and this project adheres to [Semantic Versioning].
 
 - /
 
+## [1.1.1] - 2023-08-05
+
+- BUGFIX: Attribute mapper fails with there is non-php file or a file that
+  outputs any text in any of the scan paths
+
+## [1.1.0] - 2023-07-30
+
+- Add new UUID match type
+- Add new method to assign custom match types
+
 ## [1.0.0] - 2023-06-27
 
 - initial release
@@ -20,5 +30,7 @@ and this project adheres to [Semantic Versioning].
 
 <!-- Versions -->
 
-[unreleased]: https://github.com/iziphp/router/compare/v1.0.0...HEAD
+[unreleased]: https://github.com/iziphp/router/compare/v1.1.1...HEAD
+[1.1.1]: https://github.com/iziphp/router/releases/tag/v1.1.1
+[1.1.0]: https://github.com/iziphp/router/releases/tag/v1.1.0
 [1.0.0]: https://github.com/iziphp/router/releases/tag/v1.0.0
