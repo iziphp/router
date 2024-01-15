@@ -9,6 +9,12 @@ use Easy\Router\Attributes\Path;
 use Easy\Router\Attributes\Route;
 use Easy\Router\Map;
 use Easy\Router\MapperInterface;
+use PhpParser\Error;
+use PhpParser\Node\Stmt\Class_;
+use PhpParser\Node\Stmt\Namespace_;
+use PhpParser\NodeTraverser;
+use PhpParser\NodeVisitor\NameResolver;
+use PhpParser\ParserFactory;
 use Psr\Cache\CacheItemPoolInterface;
 use Psr\Cache\InvalidArgumentException;
 use Psr\Http\Server\MiddlewareInterface; # Used in doctype.
@@ -129,22 +135,41 @@ class AttributeMapper implements MapperInterface
         $files = $this->getFileList();
         $map = [];
 
-        ob_start();
+        $parser = (new ParserFactory)->createForNewestSupportedVersion();
+        $traverser = new NodeTraverser();
+        $traverser->addVisitor(new NameResolver());
 
-        foreach ($files as $path) {
-            $classes = (static function () use ($path): array {
-                $declared = get_declared_classes();
-                require_once $path;
-                return array_diff(get_declared_classes(), $declared);
-            })();
+        foreach ($files as $filename) {
+            $code = file_get_contents($filename);
 
-            foreach ($classes as $className) {
-                $reflection = new ReflectionClass($className);
-                $this->parse($reflection, $map);
+            try {
+                $stmts = $parser->parse($code);
+            } catch (Error $e) {
+                continue;
+            }
+
+            // Traverse the nodes to resolve names
+            $stmts = $traverser->traverse($stmts);
+
+            // Iterate over statements to find class nodes
+            foreach ($stmts as $stmt) {
+                if ($stmt instanceof Class_) {
+                    $className = $stmt->namespacedName->toString();
+
+                    $reflection = new ReflectionClass($className);
+                    $this->parse($reflection, $map);
+                } elseif ($stmt instanceof Namespace_) {
+                    foreach ($stmt->stmts as $namespaceStatement) {
+                        if ($namespaceStatement instanceof Class_) {
+                            $className = $namespaceStatement->namespacedName->toString();
+
+                            $reflection = new ReflectionClass($className);
+                            $this->parse($reflection, $map);
+                        }
+                    }
+                }
             }
         }
-
-        ob_end_clean();
 
         if ($item && $this->cache && $this->isCachingEnabled) {
             $item->set($map);
