@@ -171,7 +171,7 @@ class AttributeMapper implements MapperInterface
             }
         }
 
-        if ($item && $this->cache && $this->isCachingEnabled) {
+        if ($item) {
             $item->set($map);
             $this->cache->save($item);
         }
